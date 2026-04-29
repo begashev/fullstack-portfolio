@@ -1,26 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card";
-import { MessageCircle } from "lucide-react"
+import prisma from "@/lib/db";
+import { ArrowRight, MessageCircle } from "lucide-react"
 import Link from "next/link"
 
-export default function Home() {
+export default async function Home() {
 
-  const posts = [
-    {
-      id: 1,
-      slug: "learn-nextjs-basics",
-      title: "Learn Next.js Basics",
-      content: `# Learn Next.js Basics Nextjs is a popular React framework that helps you build fast and SEO-freindly website.
-      
-      ## Why use Nextjs?
-      -Built-in routing system 
-      -Server-side rendering and static generation
-      -Great developer exerience
-
-      **Tip:** Start with the App Router if you are building new projects.
-      `
-    },
-  ];
+  const posts = await prisma.blogPost.findMany({
+    orderBy: {createdAt: "desc"},
+    take: 3,
+  }) 
+    
+  
   return (
     <main>
       {/* Hero Section */}
@@ -71,6 +62,10 @@ export default function Home() {
         ) : (
           <p className="text-muted-foreground">No posts yet</p>
         )}
+        <Button variant="link" asChild className="mt-4 px-0">
+          <Link href={"/blog"}>
+          View all posts <ArrowRight className="w-4 h-4 ml-1" /></Link>
+        </Button>
       </section>
 
     </main >
